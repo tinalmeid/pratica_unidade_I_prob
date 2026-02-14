@@ -1,6 +1,7 @@
 # 📊 Prática de Probabilidade e Estatística - Unidade I Aula 4
 
 > **Status do Projeto**: Em Desenvolvimento
+
 > ![Status da Análise](https://github.com/tinalmeid/pratica_unidade_I_prob/actions/workflows/r_analysis.yml/badge.svg)
 
 ---
