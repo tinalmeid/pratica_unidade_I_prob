@@ -3,9 +3,10 @@ name: 📊 Análise PRF 2024 | 🧬 Estatística e Probabilidade Unidade I
 # Define quais eventos disparam a execução automática.
 on:
   push:
-    branches: [ main ] # Em novos commits para a branch main
+    branches:
+      -  main  # Em novos commits para a branch main
   pull_request:
-    branches: [ main ] # Em pull requests para a branch main
+    types: [ opened, synchronize, reopened ] # Em pull requests para a branch main
 
 jobs:
   build:
