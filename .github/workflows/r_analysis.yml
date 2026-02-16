@@ -24,7 +24,7 @@ jobs:
           r-version: '4.5.2' # Minha versão específica do R
 
       # 3. Gerenciamento e instalação de pacotes necessários
-      - name: "📦 Instalando Bibliotecas (dplyr, ggplot2, scales)"
+      - name: "📦 Instalando Bibliotecas (dplyr, ggplot2, scales, testthat)"
         run: |
           install.packages(c("dplyr", "ggplot2", "scales", "testthat"), repos = "https://cloud.r-project.org/")
         shell: Rscript {0}
