@@ -1,4 +1,4 @@
-#' @file mod_casualidade.R
+#' @file mod_causalidade.R
 #' @description Módulo para análise de causalidade dos acidentes da PRF 2024.
 #' Identifica as principais causas  e tipos de acidentes para fins preventivos(educativos) ou planejamento de ações de segurança
 #'
@@ -15,22 +15,30 @@ options(OutDec = ",", big.mark = ".") # Exibir "," como separador decimal e "." 
 options("repos" = c(CRAN = "https://cloud.r-project.org/")) # Definir o repositório padrão do CRAN para instalação de pacotes
 
 #' @description Função para identificar as principais causas e tipos de acidentes
-#' @param df_casualidade Data frame contendo os dados tratados no 'data_preparation.R'
+#' @param df_causalidade Data frame contendo os dados tratados no 'data_preparation.R'
 #' @return Data frame com as métricas de causalidade calculadas
 
-analisar_casualidade <- function(df_casualidade) {
+analisar_causalidade <- function(df_causalidade) {
   cat("************************************************************************\n")
   cat("MÓDULO CAUSALIDADE - Iniciando análises de causalidade dos acidentes da PRF 2024...\n")
   cat("\n")
 
+  # Buscar os tipo únicos de condição meteorológica
+  valores_unicos_meteo <- unique(df_causalidade$condicao_metereologica)
+
+  cat("========================================================================\n")
+  cat("Tipo de condição meteorológica encontradas no data frame:\n")
+  print(valores_unicos_meteo)
+  cat("\n")
+
   # Validar se df possui as colunas necessárias para análise de causalidade
   colunas_necessarias <- c("causa_acidente", "tipo_acidente", "condicao_metereologica")
-  if (!all(colunas_necessarias %in% colnames(df_casualidade))) {
+  if (!all(colunas_necessarias %in% colnames(df_causalidade))) {
     stop("Erro: Colunas de causalidade não encontradas no data frame.")
   }
 
   # --- 1. CALCULO DA MODA DA CAUSA DE ACIDENTE ---
-  df_causalidade_causa <- df_casualidade |>
+  df_causalidade_causa <- df_causalidade |>
     group_by(causa_acidente) |>
     summarise(
       frequencia_absoluta = dplyr::n(),
@@ -51,7 +59,7 @@ analisar_casualidade <- function(df_casualidade) {
   cat("\n")
 
   # --- 2. CALCULO DA MODA DO TIPO DE ACIDENTE ---
-  df_causalidade_tipo <- df_casualidade |>
+  df_causalidade_tipo <- df_causalidade |>
     group_by(tipo_acidente) |>
     summarise(
       frequencia_absoluta = dplyr::n(),
@@ -72,17 +80,9 @@ analisar_casualidade <- function(df_casualidade) {
 
   # --- 3. CALCULO PROBABILIDADE POR CONDIÇÃO METEOROLÓGICA ---
 
-  # Buscar os tipo únicos de condição meteorológica
-  valores_unicos_meteo <- unique(df_casualidade$condicao_metereologica)
+  total_acidentes <- nrow(df_causalidade)
 
-  cat("========================================================================\n")
-  cat("Tipo de condição meteorológica encontradas no data frame:\n")
-  print(valores_unicos_meteo)
-  cat("\n")
-
-  total_acidentes <- nrow(df_casualidade)
-
-  df_causalidade_meteo <- df_casualidade |>
+  df_causalidade_meteo <- df_causalidade |>
     group_by(condicao_metereologica) |>
     summarise(
       frequencia_absoluta = dplyr::n(),
@@ -121,6 +121,10 @@ analisar_casualidade <- function(df_casualidade) {
       df_causalidade_meteo$condicao_metereologica %in% condicoes_adversas])
 
   cat("  P(Condições Adversas) = P(Chuva) + P(Nublado) + P(Neblina)... = ", round(prob_adversas, 2), "%\n", sep = "")
+
+  # Calcular probabilidade que não seja P(Condições Claras)  e  P(Condições Adversas), existe o valor ignorado no dataset
+  prob_ignoradas <- 100 - (prob_condicoes_claras + prob_adversas)
+  cat("  P(Condições Ignoradas) = 100% - P(Condições Claras) - P(Condições Adversas) = ", round(prob_ignoradas, 2), "%\n", sep = "")
   cat("\n")
 
   cat("Fim das análises de causalidade.\n")
@@ -134,6 +138,6 @@ analisar_casualidade <- function(df_casualidade) {
 }
 
 # log
-message("Módulo 'mod_casualidade.R' carregado com sucesso.")
+message("Módulo 'mod_causalidade.R' carregado com sucesso.")
 
-# Fim do arquivo mod_casualidade.R
+# Fim do arquivo mod_causalidade.R
