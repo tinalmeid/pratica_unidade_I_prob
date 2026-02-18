@@ -30,21 +30,57 @@ analisar_geografia <- function(df_geografia) {
   }
 
   # --- 1. CALCULO UF COM MAIOR NÚMERO DE ACIDENTES ---
+  total_geral <- nrow(df_geografia)
+
   df_geografia_uf <- df_geografia |>
-    group_by(uf, municipio) |>
+    group_by(uf) |>
     summarise(
       total_acidentes = dplyr::n(),
       .groups = "drop"
     ) |>
     arrange(desc(total_acidentes)) |>
     mutate(
-      # Criar um ranking para identificar os municípios mais críticos
+      # Criar um ranking para identificar UFs mais críticos
+      probabilidade = total_acidentes / total_geral * 100,
+
       ranking = row_number()
     )
 
   cat("========================================================================\n")
-  cat("As 5 primeiras cidades com maior número de acidentes:\n")
-  print(as_tibble(head(df_geografia_uf, 5)))
+  cat("A UF com maior número de acidentes é:", df_geografia_uf$uf[1],", com um total de", df_geografia_uf$total_acidentes[1],
+    "acidentes. Que representa", round(df_geografia_uf$probabilidade[1], 2), "% dos acidentes da PRF 2024.\n")
+  cat("\n")
+
+  cat("As 5 primeiras UFs com maior número de acidentes:\n")
+  df_print_uf <- df_geografia_uf |>
+    head(5) |>
+    select(ranking, uf, total_acidentes, probabilidade)
+
+  print(as_tibble(df_print_uf))
+  cat("\n")
+
+  # --- 2. CALCULO MUNICÍPIO COM MAIOR NÚMERO DE ACIDENTES ---
+  df_geografia_municipio <- df_geografia |>
+    group_by(municipio, uf) |>
+    summarise(
+      total_acidentes = dplyr::n(),
+      .groups = "drop"
+    ) |>
+    arrange(desc(total_acidentes)) |>
+    mutate(
+      probabilidade = total_acidentes / total_geral * 100,
+      ranking = row_number()
+    )
+  cat("========================================================================\n")
+  cat("O município com maior número de acidentes é:", df_geografia_municipio$municipio[1], "(", df_geografia_municipio$uf[1], ")", ", com um total de", df_geografia_municipio$total_acidentes[1],
+    "acidentes. Que representa", round(df_geografia_municipio$probabilidade[1], 2), "% dos acidentes da PRF 2024.\n")
+  cat("\n")
+
+  cat("As 5 primeiros municípios com maior número de acidentes:\n")
+  df_print_municipio <- df_geografia_municipio |>
+    head(5) |>
+    select(ranking, municipio, uf, total_acidentes, probabilidade)
+  print(as_tibble(df_print_municipio))
   cat("\n")
 
   cat("Fim das análises geográficas.\n")

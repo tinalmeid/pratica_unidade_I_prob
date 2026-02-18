@@ -111,4 +111,3 @@ test_that("Soma de acidentes por município é calculada corretamente", {
 cat("TESTES UNITÁRIOS FINALIZADOS - Módulo de Geografia\n")
 
 # Fim do arquivo test_geografia.R
-

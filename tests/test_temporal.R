@@ -35,12 +35,9 @@ cat("INICIANDO TESTES UNITÁRIOS - Módulo de Temporal\n")
 cat("\n")
 
 # Ciclo de Testes para Probabilidade e Categorização Temporal
-
 test_that("Cálculo de Probabilidades e Categorização Temporal", {
-
     # Criar Mock de dados para teste - 10 acidentes distribuídos em diferentes horários e dias
-    # Cenário 1: Madrugada de Fim de Semana (2 casos = 20%)
-    # Cenário 2: Manhã de Dia Útil (3 casos = 30%)
+    # Cenário 1: Madrugada de Fim de Semana (2 casos = 20%) Cenário 2: Manhã de Dia Útil (3 casos = 30%)
     # Cenário 3: Noite de Dia Útil (5 casos = 50%)
     df_teste <- data.frame(
         # Horários formatados HH:MM
@@ -68,19 +65,16 @@ test_that("Cálculo de Probabilidades e Categorização Temporal", {
   expect_true("ciclo_12h" %in% colnames(resultado_prob))
 
   # Teste 2: Madrugada FDS (2 acidentes em 10) -> Deve ser 20%
-  grupo_madrugada <- resultado_prob |>
-    filter(periodo_dia == "Madrugada" & eh_fim_semana == "Fim de Semana")
+  grupo_madrugada <- resultado_prob |> filter(periodo_dia == "Madrugada" & eh_fim_semana == "Fim de Semana")
   expect_equal(nrow(grupo_madrugada), 1)
   expect_equal(grupo_madrugada$probabilidade, 20)
 
   # Teste 3: Manhã Dia Útil (3 acidentes em 10) -> Deve ser 30%
-  grupo_manha <- resultado_prob |>
-    filter(periodo_dia == "Manhã" & eh_fim_semana == "Dia Útil")
+  grupo_manha <- resultado_prob |> filter(periodo_dia == "Manhã" & eh_fim_semana == "Dia Útil")
   expect_equal(grupo_manha$probabilidade, 30)
 
   # Teste 4: Noite Dia Útil (5 acidentes em 10) -> Deve ser 50%
-  grupo_noite <- resultado_prob |>
-    filter(periodo_dia == "Noite" & eh_fim_semana == "Dia Útil")
+  grupo_noite <- resultado_prob |> filter(periodo_dia == "Noite" & eh_fim_semana == "Dia Útil")
   expect_equal(grupo_noite$probabilidade, 50)
 
   # Teste 5: Verificar se a soma das probabilidades é igual a 100%
