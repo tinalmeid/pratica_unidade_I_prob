@@ -102,19 +102,19 @@ analisar_temporal <- function(df_temporal) {
 
 
   cat("====================== Outros exemplos: =================================\n")
-  cat("Algumas visões de probabilidades de acidentes por tipo de + período de dia:\n")
+  cat("Algumas visões de probabilidades de acidentes por tipo de vs período de dia:\n")
   cat("Probabilidade de acidentes na madrugada de fim de semana:", round(prob_madrugada_fds, 2), "%\n")
   cat("Probabilidade de acidentes na manhã de dia útil:", round(prob_manha_util, 2), "%\n")
   cat("Probabilidade de acidentes na tarde de dia útil:", round(prob_tarde_util, 2), "%\n")
   cat("Probabilidade de acidentes na tarde de fim de semana:", round(prob_tarde_fds, 2), "%\n")
   cat("\n")
 
-  # C - Cálculo Z para comparação de proporções entre dia e noite
+  # C - Cálculo Z para comparação de proporções entre dia útil vs final de semana
   # Proporção de acidentes no dia e na noite
   freq_fds <- sum(df_temporal_prob$frequencia[df_temporal_prob$eh_fim_semana == "Fim de Semana"])
   freq_util <- sum(df_temporal_prob$frequencia[df_temporal_prob$eh_fim_semana == "Dia Útil"])
 
-  # Proporção de acidentes no dia e na noite
+  # Proporção de acidentes dia útil vs final de semana
   prop_fds <- freq_fds / total_acidentes
   prop_util <- freq_util / total_acidentes
 

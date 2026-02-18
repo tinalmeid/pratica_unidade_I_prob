@@ -14,9 +14,9 @@ Este repositório contém a resolução da Aula Prática da Unidade I, focada na
 | # | Pergunta | Módulo Responsável |
 | --- | --- | --- |
 | 1 | Qual foi o estado com o maior número de acidentes? | `mod_geografia.R` |
-| 2 | Qual a probabilidade de um acidente ocorrer em condições climáticas claras? | `mod_casualidade.R` |
+| 2 | Qual a probabilidade de um acidente ocorrer em condições climáticas claras? | `mod_causalidade.R` |
 | 3 | Como a fase do dia afeta a ocorrência de acidentes? | `mod_temporal.R` |
-| 4 | Que insights podem ser gerados sobre os tipo de acidentes e suas causas? | `mod_casualidade.R` |
+| 4 | Que insights podem ser gerados sobre os tipo de acidentes e suas causas? | `mod_causalidade.R` |
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -37,25 +37,28 @@ Diferente de projetos que usam SonarCloud, aqui optei por uma abordagem de **Eng
 | Módulo de Teste | Módulo Testado | Principais Asserts |
 | --- | --- | --- |
 | `test_data_preparation.R` | `mod_data_preparation.R` | Valida o ETL, a ingestão de CSV e a integridade do df. |
-| `test_casualidade.R` | `mod_casualidade.R` | Valida a lógica de ranking e a agregação de acidentes por município. |
+| `test_causalidade.R` | `mod_causalidade.R` | Valida a lógica de ranking e a agregação de acidentes por município. |
 | `test_geografia.R` | `mod_geografia.R` | Valida os cálculos de média/mediana e os benchmarks nacionais. |
 | `test_severidade.R` | `mod_severidade.R` | Valida os cálculos de probabilidade e a categorização temporal. |
 | `test_temporal.R` | `mod_temporal.R` | Valida as métricas de causalidade e a análise de fatores. |
 
 ## 📊 Visualizações
 
-Gráficos profissionais com tema escuro customizado (`mod_graficos_tema.R`), gerados `ggplot2`e salvos em PNG (300 DPI)
+Gráficos profissionais com tema customizado (`mod_graficos_tema.R`), gerados `ggplot2`e salvos em PNG (300 DPI)
 
 | Gráfico | Arquivo | Descrição |
 | --- | --- | --- |
-| WIP | WIP | WIP |
+| Condições Meteorológicas | `mod_causalidade_grafico.R` | Análise da distribuição de acidentes por estado climático, destacando a probabilidade $P(Clima)$. |
+| Ranking Geográfico | `mod_geografia_grafico.R` | Identificação das 5 UFs mais críticos (Pontos de atenção), apresentando o volume absoluto de ocorrências por UF. |
+| Severidade Estadual | `mod_severidade_grafico.R` | Comparativo da média de feridos por 10 UFs mais críticos em relação à linha de referência da Média Nacional, utilizando sinalização visual. |
+| Análise Temporal | `mod_temporal_grafico.R` | Gráfico comparativo de acidentes entre Dias Úteis e Finais de Semana. |
 
 ## 📂 Estrutura do Repositório
 
 * `/.github`: Configuração do pipeline de automação
 * `/data`: Contém o dataset `datatran2024.csv`.
-* `/scripts`: Script principal `main.R` , módulos de análises (`mod_casualidade.R`, `mod_geografia.R`, `mod_severidade.R`, `mod_temporal.R`) e módulos de geração de gráficos (`mod_graficos_tema.R`, WIP, WIP, WIP, WIP)
-* `/test`: Testes unitários das funções (`test_casualidade.R`, `test_geografia.R`, `test_severidade.R`, `test_temporal.R`)
+* `/scripts`: Script principal `main.R` , módulos de análises (`mod_causalidade.R`, `mod_geografia.R`, `mod_severidade.R`, `mod_temporal.R`) e módulos de geração de gráficos (`mod_graficos_tema.R`, WIP, WIP, WIP, WIP)
+* `/test`: Testes unitários das funções (`test_causalidade.R`, `test_geografia.R`, `test_severidade.R`, `test_temporal.R`)
 * `/graficos`: PNGs gerados em tema escuro customizado e 300 DPI
 
 ---

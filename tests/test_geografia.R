@@ -39,8 +39,8 @@ test_that("analisar_geografia retorna estrutura correta", {
 
     # Criar Mock de dados para teste
     df_teste <- data.frame(
-        municipio = c("BELO HORIZONTE", "CONTAGEM", "BETIM"),
-        uf = c("MG", "MG", "MG"),
+        municipio = c("Belo Horizonte", "Contagem", "Betim", "Curitiba", "Londrina", "Maringá", "Boa Vista"),
+        uf = c("MG", "PR", "RR", "PR", "PR", "PR", "RR"),
         stringsAsFactors = FALSE
     )
 
@@ -51,58 +51,62 @@ test_that("analisar_geografia retorna estrutura correta", {
     expect_s3_class(resultado_geografia, "data.frame")
 
     # Teste 2: Verificar se as colunas esperadas estão presentes
-    expect_true(all(c("uf", "municipio", "total_acidentes", "ranking") %in% colnames(resultado_geografia)))
+    expect_true("uf" %in% colnames(resultado_geografia))
+    expect_true("total_acidentes" %in% colnames(resultado_geografia))
+    expect_true("ranking" %in% colnames(resultado_geografia))
+    expect_true("probabilidade" %in% colnames(resultado_geografia))
 })
 
-# Ciclo de Testes para Verificar Ranking de municípios por total de acidentes
-test_that("Ranking de municípios é calculado corretamente", {
+# Ciclo de Testes para Verificar Ranking de UFs por total de acidentes
+test_that("Ranking de UFs é calculado corretamente", {
     # Criar Mock de dados para teste
+    # MG: 3 acidentes, PR: 2 acidentes, RR: 1 acidente (Ranking esperado: MG 1º, PR 2º, RR 3º)
     df_teste <- data.frame(
         municipio = c(
-            rep("BELO HORIZONTE", 3), # 3 Acidentes (Será 1º)
-            rep("CONTAGEM", 2),       # 2 Acidentes (Será 2º)
-            rep("BETIM", 1)           # 1 Acidente  (Será 3º)
+            rep("MG", 3), # 3 Acidentes (Será 1º)
+            rep("PR", 2), # 2 Acidentes (Será 2º)
+            rep("RR", 1)  # 1 Acidente  (Será 3º)
     ),
-    uf = "MG",
+    uf = c(rep("MG", 3), rep("PR", 2), rep("RR", 1)),
     stringsAsFactors = FALSE
     )
 
     # Executar a função de análise geográfica
     resultado_geografia <- analisar_geografia(df_teste)
 
-    # Teste 1: Verificar se o ranking respeitou a quantidade de linhas (Betim 1, Contagem 2, Belo Horizonte 3)
-    expect_equal(resultado_geografia$ranking[resultado_geografia$municipio == "BELO HORIZONTE"], 1)
-    expect_equal(resultado_geografia$ranking[resultado_geografia$municipio == "CONTAGEM"], 2)
-    expect_equal(resultado_geografia$ranking[resultado_geografia$municipio == "BETIM"], 3)
+    # Teste 1: Verificar se o ranking respeitou a quantidade de linhas (MG 1, PR 2, RR 3)
+    expect_equal(resultado_geografia$ranking[resultado_geografia$uf == "MG"], 1)
+    expect_equal(resultado_geografia$ranking[resultado_geografia$uf == "PR"], 2)
+    expect_equal(resultado_geografia$ranking[resultado_geografia$uf == "RR"], 3)
 })
 
 # Ciclo de Testes para Calcula de total de acidentes por UF
-test_that("Soma de acidentes por município é calculada corretamente", {
-    # Criar Mock de dados para teste (BH: 3 acidentes, Contagem: 2 acidentes, Betim: 1 acidente, Total Geral: 6 acidentes)
+test_that("Soma de acidentes por UF é calculada corretamente", {
+    # Criar Mock de dados para teste (MG: 3 acidentes, PR: 2 acidentes, RR: 1 acidente, Total Geral: 6 acidentes)
     df_teste <- data.frame(
         municipio = c(
-            rep("BELO HORIZONTE", 3),
-            rep("CONTAGEM", 2),
-            rep("BETIM", 1)
+            rep("MG", 3),
+            rep("PR", 2),
+            rep("RR", 1)
         ),
-        uf = "MG", # Adicionamos UF pois o group_by usa ela
+        uf = c(rep("MG", 3), rep("PR", 2), rep("RR", 1)), # Adicionamos UF pois o group_by usa ela
         stringsAsFactors = FALSE
     )
 
     # Executar a função de análise geográfica
     resultado_geografia <- analisar_geografia(df_teste)
 
-    # Teste 1: Verificar se a soma absoluta de Belo Horizonte bate (3)
-    total_bh <- resultado_geografia$total_acidentes[resultado_geografia$municipio == "BELO HORIZONTE"]
+    # Teste 1: Verificar se a soma absoluta de MG bate (3)
+    total_bh <- resultado_geografia$total_acidentes[resultado_geografia$uf == "MG"]
     expect_equal(total_bh, 3)
 
-    # Teste 2: Verifica se a soma absoluta de Contagem bate (2)
-    total_contagem <- resultado_geografia$total_acidentes[resultado_geografia$municipio == "CONTAGEM"]
+    # Teste 2: Verifica se a soma absoluta de PR bate (2)
+    total_contagem <- resultado_geografia$total_acidentes[resultado_geografia$uf == "PR"]
     expect_equal(total_contagem, 2)
 
-    # Teste 3: Verificar se a soma absoluta de Betim bate (1)
-    total_betim <- resultado_geografia$total_acidentes[resultado_geografia$municipio == "BETIM"]
-    expect_equal(total_betim, 1)
+    # Teste 3: Verificar se a soma absoluta de RR bate (1)
+    total_rr <- resultado_geografia$total_acidentes[resultado_geografia$uf == "RR"]
+    expect_equal(total_rr, 1)
 
     # Teste 4: Verificar se a soma total de acidentes bate com o número de linhas do data frame (6)
     expect_equal(sum(resultado_geografia$total_acidentes), nrow(df_teste))
@@ -111,4 +115,3 @@ test_that("Soma de acidentes por município é calculada corretamente", {
 cat("TESTES UNITÁRIOS FINALIZADOS - Módulo de Geografia\n")
 
 # Fim do arquivo test_geografia.R
-
